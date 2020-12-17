@@ -11,6 +11,7 @@ Vue.config.productionTip = false
 
 var axios = require('axios')
 axios.defaults.baseURL = 'http://192.168.196.131:8433/api'
+axios.defaults.withCredentials = true
 
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
@@ -19,8 +20,11 @@ Vue.use(ElementUI)
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
-    if (store.state.userToken.userToken.username != null) {
-      next()
+    if (store.state.userToken.username) {
+      axios.get('/authentication').then(resp => {
+        console.log(resp)
+        if (resp) next()
+      })
     } else {
       next({
         path: 'login',

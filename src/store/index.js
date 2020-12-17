@@ -18,19 +18,17 @@ export default new Vuex.Store({
   },
   state: {
     userToken: {
-      username: window.localStorage.getItem('userToken' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('userToken' || '[]')).userToken.username
+      username: window.localStorage.getItem('userToken' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('userToken' || '[]')).username
     }
   },
   mutations: {
-    login (state, userToken) {
-      console.log(JSON.parse(window.localStorage.getItem('userToken' || '[]')).userToken.username)
-      state.userToken = userToken
-      console.log(state.userToken)
-      window.localStorage.setItem('userToken', JSON.stringify(userToken))
+    login (state, playLoad) {
+      state.userToken = playLoad.userToken
+      window.localStorage.setItem('userToken', JSON.stringify(playLoad.userToken))
+    },
+    logout (state) {
+      state.userToken = []
+      window.localStorage.removeItem('userToken')
     }
-    // logout (state) {
-    //   state.user = []
-    //   window.localStorage.removeItem('user')
-    // }
   }
 })

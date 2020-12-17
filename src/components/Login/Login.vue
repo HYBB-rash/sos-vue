@@ -64,13 +64,13 @@ export default {
               type: 'login',
               userToken: this.loginForm
             })
+            console.log('success')
             _this.$store.commit({
               type: 'setStatus',
               id: Number(successResponse.data.result)
             })
             const path = this.$route.query.redirect
-            console.log(path)
-            console.log({path: path === '/index' || path === undefined ? '/index' : path})
+            console.log(_this.$store.state.userToken)
             this.$router.replace({path: path === '/index' || path === undefined ? '/index' : path})
           }
         })
@@ -80,6 +80,10 @@ export default {
     register () {
       this.$router.replace({path: '/register'})
     }
+  },
+  beforeCreate () {
+    console.log(window.localStorage.getItem('userToken' || '[]'))
+    console.log(window.localStorage.getItem('userToken' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('userToken' || '[]')).username)
   }
 }
 </script>
