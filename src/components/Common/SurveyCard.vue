@@ -59,7 +59,8 @@
           </div></el-col>
           <!-- 分析与下载按钮-->
           <el-col :span="4"><div class="toRight">
-            <el-button style="box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1)">
+            <el-button @click="analyzeCharts"
+              style="box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1)">
               <i class="el-icon-cpu"
                  style="color: #E6A23C"></i>分析&下载</el-button>
           </div></el-col>
@@ -126,6 +127,9 @@ export default {
             this.$message.error('状态更新失败')
           }
         })
+    },
+    analyzeCharts () {
+      this.$router.replace({path: '/analyze'})
     }
   }
 }

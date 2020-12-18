@@ -7,6 +7,7 @@ import Home from '../components/Home'
 import Create from '../components/AppIndex/Create'
 import Answer from '../components/AppIndex/Answer'
 import Profile from '../components/AppIndex/Profile'
+import Analyze from '../components/AppIndex/Analyze'
 
 Vue.use(Router)
 
@@ -30,12 +31,26 @@ export default new Router({
         {
           path: '/create',
           name: 'Create',
-          component: Create
+          component: Create,
+          meta: {
+            requireAuth: true
+          }
         },
         {
           path: '/profile',
           name: 'Profile',
-          component: Profile
+          component: Profile,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/analyze',
+          name: 'Analyze',
+          component: Analyze,
+          meta: {
+            requireAuth: true
+          }
         }
       ]
 
