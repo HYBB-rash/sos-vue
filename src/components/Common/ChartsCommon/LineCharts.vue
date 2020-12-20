@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card class="box-card">
+    <el-card>
       <div :id="this.$props.id" style="width: 600px; height: 400px;"></div>
     </el-card>
   </div>
@@ -8,30 +8,31 @@
 
 <script>
 export default {
-  name: 'Charts',
-  props: ['id'],
+  name: 'LineCharts',
+  props: ['id', 'title', 'xData', 'data'],
   methods: {
     drawChart () {
       let myChart = this.$echarts.init(document.getElementById(this.$props.id))
       let option = {
         title: {
-          text: 'Echarts demo'
-        },
-        tooltip: {},
-        legend: {
-          data: ['data']
+          text: this.$props.title,
+          left: 'center',
+          top: 20,
+          textStyle: {
+            color: '#ccc'
+          }
         },
         xAxis: {
-          data: ['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff']
+          type: 'category',
+          data: this.$props.xData
         },
-        yAxis: {},
-        series: [
-          {
-            name: 'data',
-            type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
-          }
-        ]
+        yAxis: {
+          type: 'value'
+        },
+        series: [{
+          data: this.$props.data,
+          type: 'line'
+        }]
       }
       myChart.setOption(option)
     }
@@ -43,7 +44,5 @@ export default {
 </script>
 
 <style scoped>
-  .box-card {
-    width: 90%;
-  }
+
 </style>
