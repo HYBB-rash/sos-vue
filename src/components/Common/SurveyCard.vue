@@ -59,7 +59,7 @@
           </div></el-col>
           <!-- 分析与下载按钮-->
           <el-col :span="4"><div class="toRight">
-            <el-button @click="analyzeCharts"
+            <el-button @click="analyzeCharts(card.id)"
               style="box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1)">
               <i class="el-icon-cpu"
                  style="color: #E6A23C"></i>分析&下载</el-button>
@@ -128,7 +128,20 @@ export default {
           }
         })
     },
-    analyzeCharts () {
+    analyzeCharts (id) {
+      this.$axios
+        .post('/analyze', {
+          id: id
+        })
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            console.log(successResponse.data.result)
+          }
+          this.$store.commit({
+            type: 'refreshRowData',
+            rowData: successResponse.data.result
+          })
+        })
       this.$router.replace({path: '/analyze'})
     }
   }

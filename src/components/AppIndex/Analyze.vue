@@ -12,6 +12,7 @@
         <el-col :offset="1" :span="11"
                 style="margin-top: 10px; margin-bottom: 10px;" :key="index"
                 v-for="(data, index) in this.$store.state.analyze.rowData">
+<!--          <span>{{data}}</span>-->
           <bars-charts v-if="data.type === 0"
                        v-bind:id="index"
                        v-bind:title="data.title"

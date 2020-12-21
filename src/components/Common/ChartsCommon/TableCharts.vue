@@ -4,7 +4,7 @@
       <el-main>
         <el-row><h2>{{this.$props.title}}</h2></el-row>
         <el-row v-for="(item, index) in this.$props.data" :key="index">
-          <span>{{item.ans}}</span>
+          <span>{{item}}</span>
         </el-row>
       </el-main>
     </el-container>
