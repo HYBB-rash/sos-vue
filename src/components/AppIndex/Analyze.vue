@@ -43,6 +43,8 @@ import PieCharts from '../Common/ChartsCommon/PieCharts'
 import LineCharts from '../Common/ChartsCommon/LineCharts'
 import TableCharts from '../Common/ChartsCommon/TableCharts'
 import BarsCharts from '../Common/ChartsCommon/BarsCharts'
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
 export default {
   name: 'Analyze',
   components: {PieCharts, LineCharts, TableCharts, BarsCharts}
