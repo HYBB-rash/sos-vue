@@ -60,14 +60,10 @@ export default {
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
+            _this.loginForm.id = successResponse.data.result
             _this.$store.commit({
               type: 'login',
               userToken: this.loginForm
-            })
-            console.log('success')
-            _this.$store.commit({
-              type: 'setStatus',
-              id: Number(successResponse.data.result)
             })
             const path = this.$route.query.redirect
             console.log(_this.$store.state.userToken)

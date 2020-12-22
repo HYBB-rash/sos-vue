@@ -20,6 +20,7 @@ export default new Vuex.Store({
   },
   state: {
     userToken: {
+      id: window.localStorage.getItem('userToken' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('userToken' || '[]')).id,
       username: window.localStorage.getItem('userToken' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('userToken' || '[]')).username
     }
   },
@@ -31,6 +32,9 @@ export default new Vuex.Store({
     logout (state) {
       state.userToken = []
       window.localStorage.removeItem('userToken')
+    },
+    setStatus (state, playLoad) {
+      state.id = playLoad.id
     }
   }
 })
