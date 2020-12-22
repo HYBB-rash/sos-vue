@@ -18,9 +18,11 @@
           <!-- 当前的问卷发布状态 -->
           <el-col :span="2">
             <div class="grid-content" style="text-align: center" :key='card.status'>
-              <small v-if="card.status === 1" style="color: #409EFF">●已发布</small>
+              <small v-if="card.status === 1" style="color: #409EFF">●未发布</small>
               <small v-else-if="card.status === 0" style="color: #F56C6C">●已结束</small>
               <small v-else-if="card.status === 2" style="color: #909399">●已删除</small>
+              <small v-else-if="card.status === 4" style="color: #909399">●已发布</small>
+              <small v-else-if="card.status === 3" style="color: #E6A23C">●重要问卷</small>
             </div>
           </el-col>
           <!-- 参与问卷的人数 -->
@@ -41,25 +43,44 @@
       </div>
       <div>
         <!-- 功能按钮 -->
-        <el-row>
+        <el-row v-if="card.status !== 2">
+          <el-col :span="1">
+            <el-tooltip class="item" effect="dark" content="删除该问卷" placement="bottom">
+              <i class="el-icon-delete" @click="setTrash(card.id)"></i>
+            </el-tooltip>
+          </el-col>
+          <!--  -->
+          <el-col :span="1" class="grid-content">
+            <el-tooltip class="item" effect="dark" content="编辑问卷" placement="bottom" v-if="card.status !== 0">
+              <i class="el-icon-edit" @click="edit(card.id)"></i>
+            </el-tooltip>
+          </el-col>
+          <el-col :span="1" class="grid-content">
+            <el-tooltip class="item" effect="dark" content="send问卷" placement="bottom" v-if="card.status !== 0 && card.status !== 4">
+              <i class="el-icon-s-promotion" @click="setSend(card.id)"></i>
+            </el-tooltip>
+          </el-col>
           <!-- 开头的一段距离间隔 -->
-          <el-col :span="8"><div class="grid-content"></div></el-col>
-          <!-- 编辑按钮 -->
-          <el-col :span="4"><div class="toRight">
-            <el-button style="box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1)"
-                       @click="edit(card.id)">
-              <i class="el-icon-edit" style="color: #67C23A"></i>编辑问卷</el-button>
-          </div></el-col>
+          <el-col :span="9"><div class="grid-content"></div></el-col>
+<!--          &lt;!&ndash; 编辑按钮 &ndash;&gt;-->
+<!--          <el-col :span="4"><div class="toRight">-->
+<!--            <el-button style="box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1)"-->
+<!--                       :disabled="card.status === 0 || card.status === 4"-->
+<!--                       @click="setSend(card.id)">-->
+<!--              <i class="el-icon-edit" style="color: #67C23A"></i>send问卷</el-button>-->
+<!--          </div></el-col>-->
           <!-- 发送问卷按钮 -->
-          <el-col :span="4"><div class="toRight">
+          <el-col :span="4" class="grid-content"><div class="toRight">
             <el-button
               @click="getAddress"
+              :disabled="card.status === 0 || card.status !== 4"
               style="box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1)">
               <i class="el-icon-document" style="color: #409EFF"></i>发送问卷</el-button>
           </div></el-col>
           <!-- 分析与下载按钮-->
           <el-col :span="4"><div class="toRight">
             <el-button @click="analyzeCharts(card.id)"
+                       :disabled="card.status === 1"
               style="box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1)">
               <i class="el-icon-cpu"
                  style="color: #E6A23C"></i>分析&下载</el-button>
@@ -67,6 +88,7 @@
           <!-- 停止问卷按钮 -->
           <el-col :span="4"><div class="toRight">
             <el-button @click="stopSurvey(card.id)"
+                       :disabled="card.status === 0"
               style="box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1)">
               <i class="el-icon-circle-close" style="color: #F56C6C"></i>停止问卷</el-button>
           </div></el-col>
@@ -143,6 +165,61 @@ export default {
           })
         })
       this.$router.replace({path: '/analyze'})
+    },
+    setImportant (surveyId) {
+      this.$axios
+        .post('/important', {
+          id: surveyId
+        })
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            this.$store.commit('changSurveyStatus', {
+              id: surveyId,
+              status: 3
+            })
+          }
+        })
+    },
+    setUnImportant (surveyId) {
+      this.$axios
+        .post('/unimportant', {
+          id: surveyId
+        })
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            this.$store.commit('changSurveyStatus', {
+              id: surveyId,
+              status: 1
+            })
+          }
+        })
+    },
+    setTrash (surveyId) {
+      this.$axios
+        .post('/trash', {
+          id: surveyId
+        })
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            this.$store.commit('removeSurveyMessage', {
+              id: surveyId
+            })
+          }
+        })
+    },
+    setSend (surveyId) {
+      this.$axios
+        .post('/send', {
+          id: surveyId
+        })
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            this.$store.commit('changSurveyStatus', {
+              id: surveyId,
+              status: 4
+            })
+          }
+        })
     }
   }
 }

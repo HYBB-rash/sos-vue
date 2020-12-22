@@ -57,7 +57,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$store.state.create.userId = this.$store.state.user.id
+        this.$store.state.create.userId = this.$store.state.userToken.id
         this.$axios
           .post('/create', {
             survey: this.$store.state.create

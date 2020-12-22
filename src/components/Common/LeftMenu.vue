@@ -3,17 +3,17 @@
     <el-button class="create-button" type="primary" @click="open" round>创建问卷</el-button>
     <el-menu
       class="choices"
-      default-active="0"
+      default-active="-1"
       @select="handleSelect"
       active-text-color="red"
       style="box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1)">
-      <el-menu-item index="0">
+      <el-menu-item index="-1">
         <i class="el-icon-question"></i>
         <span slot="title">全部问卷</span>
       </el-menu-item>
-      <el-menu-item index="1">
-        <i class="el-icon-star-on"></i>
-        <span slot="title">重要问卷</span>
+      <el-menu-item index="0">
+        <i class="el-icon-check"></i>
+        <span slot="title">已结束问卷</span>
       </el-menu-item>
       <el-menu-item index="2">
         <i class="el-icon-truck"></i>
@@ -33,6 +33,19 @@ export default {
   },
   methods: {
     handleSelect (key, keyPath) {
+      this.$axios
+        .post('/surveyList', {
+          id: this.$store.state.userToken.id,
+          key: Number(key)
+        })
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            this.$store.commit({
+              type: 'pushSurveyMessage',
+              result: successResponse.data.result
+            })
+          }
+        })
     },
     open () {
       this.$store.commit({

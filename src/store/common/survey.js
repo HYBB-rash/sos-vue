@@ -36,6 +36,22 @@ export default {
       for (let i = 0; i < playLoad.result.length; i++) {
         state.surveyMessage.push(playLoad.result[i])
       }
+    },
+    changSurveyStatus (state, playLoad) {
+      for (let i = 0; i < state.surveyMessage.length; i++) {
+        if (state.surveyMessage[i].id === playLoad.id) {
+          state.surveyMessage[i].status = playLoad.status
+          break
+        }
+      }
+    },
+    removeSurveyMessage (state, playLoad) {
+      for (let i = 0; i < state.surveyMessage.length; i++) {
+        if (state.surveyMessage[i].id === playLoad.id) {
+          state.surveyMessage.splice(i, 1)
+          break
+        }
+      }
     }
   }
 }
