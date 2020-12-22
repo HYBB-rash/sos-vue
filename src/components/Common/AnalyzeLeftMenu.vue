@@ -20,12 +20,25 @@ export default {
       this.$axios
         .post('/excel', {
           excelData: this.$store.state.analyze.rowData
+        }, {
+          responseType: 'blob'
         })
-        .then(successResponse => {
-          if (successResponse.data.code === 200) {
-            console.log(successResponse.data.result)
-          }
+        .then(res => {
+          let blob = new Blob([res.data], {type: 'application/ms-excel;charset=utf-8'})
+          let downloadElement = document.createElement('a')
+          let href = window.URL.createObjectURL(blob)
+          downloadElement.href = href
+          downloadElement.download = Date.now() + '.xls'
+          document.body.appendChild(downloadElement)
+          downloadElement.click()
+          document.body.removeChild(downloadElement)
+          window.URL.revokeObjectURL(href)
         })
+        // .then(successResponse => {
+        //   if (successResponse.data.code === 200) {
+        //     console.log(successResponse.data.result)
+        //   }
+        // })
     }
   }
 }
