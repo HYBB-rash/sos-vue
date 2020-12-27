@@ -136,7 +136,7 @@ export default {
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
-            this.$axios.post('/survey', {id: this.$store.state.user.id})
+            this.$axios.post('/survey', {id: this.$store.state.userToken.id})
               .then(successResponse => {
                 if (successResponse.data.code === 200) {
                   this.$store.commit({

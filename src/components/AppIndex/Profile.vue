@@ -48,7 +48,7 @@
           </el-form-item>
           <el-form-item>
             <el-col :span="6" :offset="6">
-              <el-button><i  class="el-icon-finished" style="color: #42b983"></i>提交修改</el-button></el-col>
+              <el-button @click="updateProfile"><i  class="el-icon-finished" style="color: #42b983"></i>提交修改</el-button></el-col>
             <el-col :span="6">
               <el-button><i  class="el-icon-refresh" style="color: #409EFF"></i>重置信息</el-button></el-col>
           </el-form-item>
@@ -60,7 +60,32 @@
 
 <script>
 export default {
-  name: 'Profile'
+  name: 'Profile',
+  methods: {
+    updateProfile () {
+      this.$axios
+        .post('/profile/update', {
+          id: this.$store.state.userToken.id,
+          customer: this.$store.state.profile
+        })
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            console.log(successResponse.data.result)
+          }
+        })
+    }
+  },
+  beforeCreate () {
+    this.$axios
+      .post('/profile', {id: this.$store.state.userToken.id})
+      .then(successResponse => {
+        if (successResponse.data.code === 200) {
+          this.$store.commit('refreshProfile', {
+            profile: successResponse.data.result
+          })
+        }
+      })
+  }
 }
 </script>
 

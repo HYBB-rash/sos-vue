@@ -13,8 +13,16 @@
                   autocomplete="off" aria-placeholder="密码"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" class="login_button"
-                   v-on:click="login">登录</el-button>
+        <el-popover
+          placement="top"
+          width="400"
+          trigger="click">
+          <div style="height: 150px">
+            <verify  @success="login"
+                     @error="console.log('dfasf')" :type="2"></verify>
+          </div>
+          <el-button type="primary" class="login_button" slot="reference">登录</el-button>
+        </el-popover>
       </el-form-item>
       <el-form-item>
         <el-button type="warning" class="login_button" v-on:click="register">注册</el-button>
@@ -24,8 +32,10 @@
 </template>
 
 <script>
+import Verify from 'vue2-verify'
 export default {
   name: 'Login',
+  components: {Verify},
   data () {
     const checkUsername = (rule, value, callback) => {
       if (!value) {
@@ -99,7 +109,7 @@ export default {
     border-radius: 15px;
     background-clip: padding-box;
     margin: 90px auto;
-    width: 350px;
+    width: 40%;
     padding: 35px 35px 15px 35px;
     background: #fff;
     border: 1px solid #eaeaea;
