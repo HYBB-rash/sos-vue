@@ -12,7 +12,7 @@
           <!-- 问卷的ID -->
           <el-col :span="3">
             <div class="grid-content" style="text-align: center" :key='card.id'>
-              <small>ID:{{ card.id + Date.now()}}</small>
+              <small>ID:{{ card.id + Date.now() % 10000000}}</small>
             </div>
           </el-col>
           <!-- 当前的问卷发布状态 -->
@@ -56,7 +56,7 @@
             </el-tooltip>
           </el-col>
           <el-col :span="1" class="grid-content">
-            <el-tooltip class="item" effect="dark" content="send问卷" placement="bottom" v-if="card.status !== 0 && card.status !== 4">
+            <el-tooltip class="item" effect="dark" content="发布问卷" placement="bottom" v-if="card.status !== 0 && card.status !== 4">
               <i class="el-icon-s-promotion" @click="setSend(card.id)"></i>
             </el-tooltip>
           </el-col>
@@ -109,18 +109,44 @@ export default {
   },
   methods: {
     edit (id) {
-      this.$store.state.create.id = id
+      this.$confirm('如果您要重新编辑问卷，将清除所有问卷的答案，是否继续', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.clearAnsBySurveyId(id)
+        this.$store.state.create.id = id
+        this.$axios
+          .post('/edit', {
+            id: id
+          })
+          .then(successResponse => {
+            this.$store.commit({
+              type: 'refreshEdit',
+              editForm: successResponse.data.result
+            })
+          })
+        this.$router.replace({path: '/create'})
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消操作'
+        })
+      })
+    },
+    clearAnsBySurveyId (id) {
+      console.log('demo!!!')
       this.$axios
-        .post('/edit', {
+        .post('/answer/clear', {
           id: id
         })
         .then(successResponse => {
-          this.$store.commit({
-            type: 'refreshEdit',
-            editForm: successResponse.data.result
-          })
+          if (successResponse.data.code === 200) {
+            this.$message.info('初始化成功')
+          } else if (successResponse.data.code === 400) {
+            this.$message.error('初始化失败')
+          }
         })
-      this.$router.replace({path: '/create'})
     },
     getAddress () {
       const address = this.$store.state.user.address + this.$props.card.id
@@ -166,20 +192,6 @@ export default {
         })
       this.$router.replace({path: '/analyze'})
     },
-    setImportant (surveyId) {
-      this.$axios
-        .post('/important', {
-          id: surveyId
-        })
-        .then(successResponse => {
-          if (successResponse.data.code === 200) {
-            this.$store.commit('changSurveyStatus', {
-              id: surveyId,
-              status: 3
-            })
-          }
-        })
-    },
     setUnImportant (surveyId) {
       this.$axios
         .post('/unimportant', {
@@ -195,6 +207,7 @@ export default {
         })
     },
     setTrash (surveyId) {
+      this.clearAnsBySurveyId(surveyId)
       this.$axios
         .post('/trash', {
           id: surveyId

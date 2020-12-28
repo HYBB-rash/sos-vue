@@ -7,7 +7,7 @@
           <el-form-item>
             <el-col :span="6"><div style="text-align: right">用户名</div></el-col>
             <el-col :span="14" :offset="1">
-              <el-input suffix-icon="el-icon-user"
+              <el-input suffix-icon="el-icon-user" disabled
                         v-model="$store.state.profile.username"></el-input>
             </el-col>
           </el-form-item>
@@ -50,7 +50,7 @@
             <el-col :span="6" :offset="6">
               <el-button @click="updateProfile"><i  class="el-icon-finished" style="color: #42b983"></i>提交修改</el-button></el-col>
             <el-col :span="6">
-              <el-button><i  class="el-icon-refresh" style="color: #409EFF"></i>重置信息</el-button></el-col>
+              <el-button @click="resetInfo"><i  class="el-icon-refresh" style="color: #409EFF"></i>重置信息</el-button></el-col>
           </el-form-item>
         </el-form>
       </el-card>
@@ -70,7 +70,23 @@ export default {
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
-            console.log(successResponse.data.result)
+            this.$message.success('信息修改成功')
+          } else if (successResponse.data.code === 400) {
+            this.$message.error('出现了一些奇怪的问题呢！')
+          }
+        })
+    },
+    resetInfo () {
+      this.$axios
+        .post('/profile', {id: this.$store.state.userToken.id})
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            this.$store.commit('refreshProfile', {
+              profile: successResponse.data.result
+            })
+            this.$message.success('重置成功！')
+          } else if (successResponse.data.code === 400) {
+            this.$message.error('服务器出错！')
           }
         })
     }

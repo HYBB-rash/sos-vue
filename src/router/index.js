@@ -15,10 +15,10 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/home',
+      path: '/',
       name: 'Home',
       component: Home,
-      redirect: ['/index'],
+      redirect: '/index',
       children: [
         {
           path: '/index',
