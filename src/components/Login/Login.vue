@@ -88,8 +88,6 @@ export default {
     }
   },
   beforeCreate () {
-    console.log(window.localStorage.getItem('userToken' || '[]'))
-    console.log(window.localStorage.getItem('userToken' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('userToken' || '[]')).username)
   }
 }
 </script>

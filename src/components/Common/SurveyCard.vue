@@ -60,8 +60,13 @@
               <i class="el-icon-s-promotion" @click="setSend(card.id)"></i>
             </el-tooltip>
           </el-col>
+          <el-col :span="1" class="grid-content">
+            <el-tooltip class="item" effect="dark" content="导出问卷" placement="bottom">
+              <i class="el-icon-download" @click="downloadSurvey(card.id)"></i>
+            </el-tooltip>
+          </el-col>
           <!-- 开头的一段距离间隔 -->
-          <el-col :span="9"><div class="grid-content"></div></el-col>
+          <el-col :span="8"><div class="grid-content"></div></el-col>
 <!--          &lt;!&ndash; 编辑按钮 &ndash;&gt;-->
 <!--          <el-col :span="4"><div class="toRight">-->
 <!--            <el-button style="box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1)"-->
@@ -232,6 +237,25 @@ export default {
               status: 4
             })
           }
+        })
+    },
+    downloadSurvey (surveyId) {
+      this.$axios
+        .post('/excel/survey', {
+          id: surveyId
+        }, {
+          responseType: 'blob'
+        })
+        .then(res => {
+          let blob = new Blob([res.data], {type: 'application/ms-excel;charset=utf-8'})
+          let downloadElement = document.createElement('a')
+          let href = window.URL.createObjectURL(blob)
+          downloadElement.href = href
+          downloadElement.download = Date.now() + '.xls'
+          document.body.appendChild(downloadElement)
+          downloadElement.click()
+          document.body.removeChild(downloadElement)
+          window.URL.revokeObjectURL(href)
         })
     }
   }
